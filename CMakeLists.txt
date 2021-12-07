@@ -1,0 +1,39 @@
+
+IF ((NOT DAS_REQUESTS_INCLUDED) AND ((NOT ${DAS_REQUESTS_DISABLED}) OR (NOT DEFINED DAS_REQUESTS_DISABLED)))
+    SET(DAS_REQUESTS_INCLUDED TRUE)
+    MESSAGE(STATUS "dasRequests module included.")
+
+	SET(DAS_REQUESTS_DIR ${PROJECT_SOURCE_DIR}/modules/dasRequests)
+
+  LIST(APPEND CMAKE_MODULE_PATH ${DAS_REQUESTS_DIR})
+
+  set(CURL_SOURCE_DIR ${DAS_REQUESTS_DIR}/curl)
+  set(HTTP_ONLY YES)
+  set(BUILD_CURL_EXE OFF)
+  set(BUILD_SHARED_LIBS OFF)
+  set(CURL_STATICLIB YES)
+  set(BUILDING_LIBCURL YES)
+  set(CURL_DISABLE_LDAP YES)
+
+  #message("CURL_SOURCE_DIR = '${CURL_SOURCE_DIR}'")
+  # add_subdirectory(CURL_SOURCE_DIR) # doesn't work ???
+  add_subdirectory(${DAS_REQUESTS_DIR}/curl)
+
+	# libDasModuleRequests
+	SET(DAS_REQUESTS_MODULE_SRC
+		${DAS_REQUESTS_DIR}/src/dasRequests.cpp
+	)
+
+	ADD_MODULE_LIB(libDasModuleRequests)
+	ADD_MODULE_CPP(Requests)
+	ADD_LIBRARY(libDasModuleRequests ${DAS_REQUESTS_MODULE_SRC} ${DAS_REQUESTS_MODULE_PLATFORM_SRC})
+	TARGET_LINK_LIBRARIES(libDasModuleRequests
+    libcurl
+  )
+	ADD_DEPENDENCIES(libDasModuleRequests libcurl)
+	TARGET_INCLUDE_DIRECTORIES(libDasModuleRequests PUBLIC
+    # ${CURL_SOURCE_DIR}/include
+  )
+	SETUP_CPP11(libDasModuleRequests)
+
+ENDIF()
