@@ -1,5 +1,6 @@
 require requests
 require fio
+require daslib/strings_boost
 
 [export]
 def main
@@ -9,6 +10,7 @@ def main
         print("Response received: status code = {resp.code}\n")
         print("Body length: {length(resp.body)}\n")
         print("Body: {resp.body[0]}, {resp.body[1]}...\n")
+        print("Body text: {resp.text |> slice(0, 200)}\n")
         finished = true
 
 
@@ -17,10 +19,10 @@ def main
 
 
     let params <- [[RequestParams
-      method = "GET",
-      url = "http://localhost:8000/",
-      callback <- onResponse,
-      onProgress <- onProgress
+        method = "GET",
+        url = "http://localhost:8000/",
+        callback <- onResponse,
+        onProgress <- onProgress
     ]]
 
     print("Sending request...\n")

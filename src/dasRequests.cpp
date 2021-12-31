@@ -73,6 +73,11 @@ struct Response {
     int code = 0;
     das::TArray<uint8_t> body;
     // TODO: headers table
+
+    const char* text()
+    {
+        return body.data; // a traling zero is manually appended to body
+    }
 };
 
 
@@ -205,8 +210,11 @@ public:
           Response resp;
           resp.code = httpCode;
 
+          uint32_t size = uint32_t(responseBody.size());
+          responseBody.push_back(0); // trailing zero for using as string
+
           resp.body.data = (char *)responseBody.data();
-          resp.body.size = resp.body.capacity = uint32_t(responseBody.size());
+          resp.body.size = resp.body.capacity = size;
           resp.body.lock = 1;
           resp.body.flags = 0;
 
@@ -324,6 +332,7 @@ struct ResponseTypeAnnotation : ManagedStructureAnnotation <Response> {
     ResponseTypeAnnotation(ModuleLibrary & ml) : ManagedStructureAnnotation ("Response",ml) {
         addField<DAS_BIND_MANAGED_FIELD(code)>("code","code");
         addField<DAS_BIND_MANAGED_FIELD(body)>("body","body");
+        addProperty<DAS_BIND_MANAGED_PROP(text)>("text");
     }
 };
 
