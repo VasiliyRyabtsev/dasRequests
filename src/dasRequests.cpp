@@ -8,6 +8,8 @@
 
 #include <curl/curl.h>
 
+#include <list>
+
 #if __cplusplus >= 201703L
 #define HAS_STRING_VIEW 1
 #include <string_view>
