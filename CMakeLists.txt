@@ -17,6 +17,10 @@ IF ((NOT DAS_REQUESTS_INCLUDED) AND ((NOT ${DAS_REQUESTS_DISABLED}) OR (NOT DEFI
   set(BUILDING_LIBCURL YES)
   set(CURL_DISABLE_LDAP YES)
 
+  set(CURL_ENABLE_SSL ON)
+  set(CURL_USE_SCHANNEL ON) # enable Windows native SSL/TLS
+
+
   #message("CURL_SOURCE_DIR = '${CURL_SOURCE_DIR}'")
   # add_subdirectory(CURL_SOURCE_DIR) # doesn't work ???
   add_subdirectory(${DAS_REQUESTS_DIR}/curl)
