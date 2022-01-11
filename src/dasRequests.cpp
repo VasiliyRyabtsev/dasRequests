@@ -340,7 +340,7 @@ struct ResponseTypeAnnotation : ManagedStructureAnnotation <Response> {
 
 
 static intptr_t request(const RequestParams &params, Context * context, LineInfoArg * at) {
-    LOG(LogLevel::error) << "request for " << params.url;
+    LOG(LogLevel::trace) << "request for " << params.url;
 
     RequestStatePtr rsp = make_unique<RequestState>(params, context, at);
     RequestState *reqStatePtr = rsp.get();
