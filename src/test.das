@@ -2,14 +2,15 @@ require requests
 require fio
 require daslib/strings_boost
 
+var finished = false
+
 [export]
 def main
-    var finished = false
-
     var onResponse <- @ <| (resp:Response)
         print("Response received: status code = {resp.code}\n")
         print("Body length: {length(resp.body)}\n")
-        print("Body: {resp.body[0]}, {resp.body[1]}...\n")
+        if length(resp.body)>0
+            print("Body: {resp.body[0]}, {resp.body[1]}...\n")
         print("Body text: {resp.text |> slice(0, 200)}\n")
         finished = true
 
@@ -29,7 +30,7 @@ def main
     request(params)
 
     print("Request sent, polling\n")
-    for i in range(0, 3)
+    for i in range(0, 50)
         sleep(100u)
         requests_poll()
         if finished
